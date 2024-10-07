@@ -44,7 +44,7 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
       fullName: learner.fullName, 
       mentors: learner.mentors.map (mentorId => {
         const mentor = mentors.find(m => m.id === mentorId);
-        return mentor ? mentor.fullName : null;
+        return mentor ? `${mentor.firstName} ${mentor.lastName}` : null;
       }).filter(name => name !== null)
     }
   })
