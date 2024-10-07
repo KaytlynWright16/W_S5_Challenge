@@ -12,6 +12,14 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   let mentors = [] // fix this
   let learners = [] // fix this
 
+  const [learnersResponse, mentorsResponse] = await Promise.all([
+    axios.get('http://localhost:3003/api/learners'),
+    axios.get('http://localhost:3003/api/mentors'),
+  ])
+
+  learners = learnersResponse.data;
+  mentors = mentorsResponse.data;
+
   // 👆 ==================== TASK 1 END ====================== 👆
 
   // 👇 ==================== TASK 2 START ==================== 👇
@@ -28,6 +36,18 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   //     "Grace Hopper"
   //   ]`
   // }
+
+  learners = learners.map(learner => {
+    return {
+      id: learner.id, 
+      email: learner.email, 
+      fullName: learner.fullName, 
+      mentors: learner.mentors.map (mentorId => {
+        const mentor = mentors.find(m => m.id === mentorId);
+        return mentor ? mentor.fullName : null;
+      }).filter(name => name !== null)
+    }
+  })
 
   // 👆 ==================== TASK 2 END ====================== 👆
 
@@ -48,10 +68,27 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
     // ❗ Inspect the mock site closely to understand what the initial texts and classes look like!
 
     const card = document.createElement('div')
+    card.className = 'card'; 
     const heading = document.createElement('h3')
+    heading.textContent = learner.fullName;
     const email = document.createElement('div')
+    email.className = 'email'; 
+    email.textContent = learner.email;
     const mentorsHeading = document.createElement('h4')
+    mentorsHeading.textContent = 'Mentors';
+    mentorsHeading.className = 'closed'; 
     const mentorsList = document.createElement('ul')
+    mentorsList.style.display = 'none'; 
+
+    learner.mentors.forEach(mentorName => {
+      const li = document.createElement('li');
+      li.textContent = mentorName; 
+      mentorsList.appendChild(li); 
+    });
+
+    card.appendChild(heading);
+    card.appendChild(email);
+    card.appendChild(mentorsHeading);
 
     // 👆 ==================== TASK 3 END ====================== 👆
 
